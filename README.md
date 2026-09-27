@@ -2,6 +2,11 @@
 
 **Live demo: https://kavach-kappa.vercel.app**
 
+<p align="center">
+  <img src="docs/media/demo.gif" alt="Kavach checking a fake Hindi 'CBI' notice: the photo is read, fraud patterns are checked, and a scam verdict with a Hindi explanation and voice appears" width="880">
+  <br><sub>A fake Hindi "CBI" notice checked on the live site: Sarvam Vision reads it, Sarvam-105B + rules find the red flags, Bulbul speaks the verdict in Hindi (≈ 20 s, shown sped up).</sub>
+</p>
+
 **Kavach** helps people in India check whether a **call recording, voice note, photo of a notice, PDF or SMS** is a scam, and understand genuine paperwork. It explains the result **and speaks it** in the person's own language.
 
 - **Understands** 22 Indian languages + English (text, speech, documents). **Speaks** in 11 via Bulbul v3.
@@ -18,14 +23,52 @@ Kavach works with the actual call, voice note or document photo, in the language
 
 ## Demo flow (≈ 60 seconds)
 
-1. Open `http://localhost:8000` and tap the **"Digital arrest" call** sample (Hindi, 45 s, two speakers).
+1. Open the [live demo](https://kavach-kappa.vercel.app) (or `http://localhost:8000` locally) and tap the **"Digital arrest" call** sample (Hindi, 45 s, two speakers).
 2. Progress streams live: *Listening (Saaras v3 Batch + diarization) → Checking for fraud patterns (Sarvam-105B + rules) → Explaining in Hindi → Recording a voice explanation (Bulbul v3)*.
-3. Result: **Scam — 100/100**. There are six red flags and every one is corroborated by both the AI and the rules. Tap a red flag and the player jumps to that moment in the call, labelled with the speaker.
+3. Result: **Scam — 100/100**, with six red flags, most confirmed by both the AI and the rules. Tap a red flag and the player jumps to that moment in the call, labelled with the speaker.
 4. Press play to hear the explanation in Hindi. Then ask by voice: *"क्या मुझे पैसे भेजने चाहिए?"* ("Should I send money?"). The answer is spoken back, and it only uses what is in the call.
 5. Open **Complaint draft**. It is filled in from verified data only and is ready for 1930 or cybercrime.gov.in.
    Nothing is kept on the server: **Clear this page** wipes it from the browser.
 6. Try the **"CBI" notice** photo. Each red flag is highlighted on the image. Then try the Tamil **electricity notice** photo. It is genuine, so Kavach gives **low risk 0** and explains the amount due and the deadline.
 7. Open the **Trace** panel. It lists every Sarvam API call with its latency, and the claims the AI made that Kavach **discarded** because they are not in the source.
+
+## Screenshots
+
+All captured from the live site with `python scripts/capture_media.py --url https://kavach-kappa.vercel.app`.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/media/result-call.png" alt="Scam verdict 100 for a Hindi digital-arrest call with a Hindi explanation and voice player"></td>
+    <td width="50%"><img src="docs/media/call-transcript.png" alt="Call transcript split by speaker, with the suspected caller's lines highlighted"></td>
+  </tr>
+  <tr>
+    <td><b>"Digital arrest" call (Hindi, 45 s).</b> Verdict, explanation and voice in Hindi.</td>
+    <td><b>Who said what.</b> Saaras batch diarization separates the speakers; the suspected caller's flagged lines are highlighted and each has a timestamp to jump to.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/media/evidence-overlay.png" alt="Photo of a fake CBI notice with red boxes around the fraudulent lines"></td>
+    <td><img src="docs/media/red-flags.png" alt="List of red flags with verified quotes and AI + rules badges"></td>
+  </tr>
+  <tr>
+    <td><b>Evidence on the image.</b> Sarvam Vision returns bounding boxes, so every red flag is drawn on the original notice.</td>
+    <td><b>Red flags with exact quotes.</b> Each quote was verified against the source; badges show whether the AI, the rules, or both found it.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/media/result-genuine.png" alt="Genuine Tamil electricity notice marked low risk 0 with a Tamil explanation"></td>
+    <td><img src="docs/media/trace.png" alt="Pipeline trace with per-API latencies and the risk-score breakdown"></td>
+  </tr>
+  <tr>
+    <td><b>It doesn't cry wolf.</b> A genuine Tamil electricity notice gets low risk 0, and the amount and deadline are explained in Tamil.</td>
+    <td><b>How Kavach checked this.</b> Every Sarvam API call with its latency, and how the risk score was built from verified findings.</td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="docs/media/home.png" alt="Kavach home screen with upload, record and paste options and example cards" width="62%">
+  &nbsp;
+  <img src="docs/media/mobile.png" alt="Kavach on a phone showing a Tamil scam verdict" width="26%">
+  <br><sub>Home screen (upload, record or paste, plus examples) and the mobile view of a Tamil KYC voice-note scam.</sub>
+</p>
 
 ## Architecture
 

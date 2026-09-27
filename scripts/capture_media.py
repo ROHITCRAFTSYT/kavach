@@ -40,7 +40,12 @@ def reset(page: Page) -> None:
     page.evaluate("window.scrollTo(0, 0)")
 
 
+SKIP_STILLS = False
+
+
 def shot(page: Page, name: str, selector: str | None = None) -> None:
+    if SKIP_STILLS:
+        return
     path = OUT / name
     if selector:
         page.locator(selector).first.scroll_into_view_if_needed()
@@ -60,7 +65,15 @@ def build_gif(frames: list[tuple[Image.Image, int]], path: Path, width: int = 88
     for img, ms in frames:
         h = round(img.height * width / img.width)
         resized.append((img.resize((width, h), Image.LANCZOS), ms))
-    palette_src = resized[-1][0].quantize(colors=128, method=Image.Quantize.MEDIANCUT)
+    # One shared palette built from ALL frames (a palette from a single frame loses colours such as the
+    # green "done" ticks that only appear in some frames).
+    thumbs = [im.resize((im.width // 4, im.height // 4)) for im, _ in resized]
+    sheet = Image.new("RGB", (thumbs[0].width, sum(t.height for t in thumbs)))
+    y = 0
+    for t in thumbs:
+        sheet.paste(t, (0, y))
+        y += t.height
+    palette_src = sheet.quantize(colors=255, method=Image.Quantize.MEDIANCUT)
     imgs = [im.quantize(palette=palette_src, dither=Image.Dither.NONE) for im, _ in resized]
     imgs[0].save(path, save_all=True, append_images=imgs[1:], duration=[ms for _, ms in resized],
                  loop=0, optimize=True, disposal=1)
@@ -70,7 +83,10 @@ def build_gif(frames: list[tuple[Image.Image, int]], path: Path, width: int = 88
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--url", default="http://localhost:8000")
+    ap.add_argument("--gif-only", action="store_true", help="only record demo.gif")
     args = ap.parse_args()
+    global SKIP_STILLS
+    SKIP_STILLS = args.gif_only
     OUT.mkdir(parents=True, exist_ok=True)
 
     with sync_playwright() as pw:
@@ -110,6 +126,9 @@ def main() -> None:
         page.wait_for_timeout(500)
         shot(page, "trace.png", "#trace-details")
         build_gif(gif, OUT / "demo.gif")
+        if args.gif_only:
+            browser.close()
+            return
 
         # --- Hindi "digital arrest" call: diarized transcript -------------------------------
         reset(page)
