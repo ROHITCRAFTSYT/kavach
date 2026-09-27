@@ -213,7 +213,7 @@ web/        index.html · styles.css · app.js (no framework, CSP-friendly)
 samples/    demo inputs (Hindi call, Tamil voice note, Hindi "CBI" notice, Tamil power notice)
 scripts/    make_samples.py (Bulbul-voiced calls, rendered notices) · smoke.py · hello_sarvam.py
 tests/      pytest suite          eval/   labelled eval harness
-docs/       ARCHITECTURE.md · PITCH.md
+docs/       ARCHITECTURE.md · media/ (README screenshots)
 ```
 
 ## Limitations & roadmap
