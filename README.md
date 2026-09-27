@@ -1,6 +1,6 @@
 # Kavach (कवच) — a shield against scams, in your own language
 
-Live demo: <URL>
+**Live demo: https://kavach-kappa.vercel.app**
 
 **Kavach** helps people in India check whether a **call recording, voice note, photo of a notice, PDF or SMS** is a scam, and understand genuine paperwork. It explains the result **and speaks it** in the person's own language.
 
@@ -156,7 +156,7 @@ Use this for self-hosting. The image is `python:3.12-slim` with ffmpeg. It runs 
 
 ```bash
 pip install pytest pytest-asyncio   # requirements-dev
-python -m pytest -q                 # 153 offline tests: grounding, rules, scoring, ingest, API
+python -m pytest -q                 # 151 offline tests: grounding, rules, scoring, ingest, API
 python eval/run_eval.py             # labelled eval set → metrics (results in eval/results/)
 python scripts/smoke.py             # full live pipeline on every bundled sample
 ```
@@ -170,6 +170,18 @@ Suggested dev pins: `pytest>=9.1`, `pytest-asyncio>=1.4`.
 - Advice text like "the bank never asks for your OTP" triggered red flags. Suppression now works per clause or sentence and checks for request verbs.
 - `chunk_text` dropped newlines.
 
+**Evaluation** (`eval/`, 40 hand-written cases: 20 scam / 20 genuine, 10 languages + Hinglish, with hard negatives such as real OTP messages and "the bank never asks for your OTP" advisories). One analysis per case; the ablation re-scores the same run, so it costs no extra API calls. Full report: [`eval/results/report.md`](eval/results/report.md).
+
+| System | Run 1 accuracy | Run 1 F1 | Run 2 accuracy | Run 2 F1 | Run 2 false-positive rate |
+|---|---|---|---|---|---|
+| Rules only | 55.0% | 40.0% | 62.5% | 44.4% | 5% |
+| AI only (verified claims) | 92.5% | 92.3% | 100% | 100% | 0% |
+| **Fused (what Kavach shows)** | **90.0%** | **90.0%** | **100%** | **100%** | **0%** |
+
+Evidence verification: 96.4% (run 1) and 96.8% (run 2) of AI-cited quotes were found in the source; the rest were discarded and did not affect the score. Latency p50 5.7 s, p95 41 s (text cases, run 2).
+
+Between the runs we fixed what run 1 exposed: genuine OTP-delivery messages being flagged (rules now recognise a delivered code and "valid for N minutes"; the prompt states that safety advice is a sign of a genuine message), Hinglish advisory phrases, and LLM repetition loops (retry with a frequency penalty, then fall back to the conversations model; degraded runs went from 2 to 0). **Caveat:** these fixes were made after looking at this same set, so run 2 is a development-set score, not a held-out one. The dataset is small and synthetic; a larger held-out set is on the roadmap.
+
 **Smoke results on the bundled samples** (live Sarvam APIs, `python scripts/smoke.py`, 27 Sep 2026):
 
 | Sample | Result | End-to-end |
@@ -182,6 +194,15 @@ Suggested dev pins: `pytest>=9.1`, `pytest-asyncio>=1.4`.
 | Hindi genuine bank debit SMS ("bank never asks for OTP") | **low risk 0** (hard negative) | 11.2 s |
 
 End-to-end includes STT/OCR, analysis, localisation and speech synthesis. *One run hit a runaway generation and retried; token budgets are now capped so a runaway fails fast. Disabling Sarvam-105B reasoning (`reasoning_effort=None`) cut analysis from 166–255 s to ~5–12 s with no loss in verified quotes on our samples.
+
+**Live deployment** (`https://kavach-kappa.vercel.app`, Vercel, 27 Sep 2026):
+
+| Sample | Result | End-to-end |
+|---|---|---|
+| Genuine Hindi bank SMS | low risk 0 | 14 s |
+| Tamil KYC voice note (REST STT) | scam 98 | 17 s |
+| Fake "CBI" notice photo (Sarvam Vision) | scam 100 | 25 s |
+| 45 s Hindi "digital arrest" call (batch STT + diarization) | scam 100 | 64 s |
 
 ## Project layout
 

@@ -88,7 +88,7 @@ We check the Unicode script ratio of the output. We saw a case where we asked fo
 - The API key only exists at runtime.
 
 **Q: How accurate is it?**
-The bundled samples give the expected verdicts (scam 97–100 for all four scams, 0 for the genuine notice). There's also a labelled eval harness (`eval/run_eval.py`). The test suite has 153 passing tests. It caught real bugs, including a grounding hole where a long made-up quote could match a short segment. That's now fixed with windowed alignment. We're honest that the eval set is small. Growing it with real anonymised cases is our top roadmap item.
+The bundled samples give the expected verdicts (scam 97–100 for all four scams, 0 for the genuine notice). On a 40-case multilingual eval set (with hard negatives) the fused system scored 90% on the first run and 100% after fixing what that run exposed (a development-set score, since we tuned on it). The test suite has 151 passing tests. It caught real bugs, including a grounding hole where a long made-up quote could match a short segment. That's now fixed with windowed alignment. We're honest that the eval set is small. Growing it with real anonymised cases is our top roadmap item.
 
 **Q: False positives on genuine messages, like bank alerts?**
 Legitimate content with no verified red flags scores close to 0. The Tamil electricity notice scores 0. The bundled genuine Hindi bank SMS sample is there to show this live. Rule-only hits count at half weight, so one keyword can't turn something into a scam.
