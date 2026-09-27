@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Kavach · कवच — Is this real?</title>
+  <meta name="description" content="Check whether a call recording, voice note, notice, letter or SMS is a scam — explained and spoken in your own language. Built on Sarvam AI.">
+  <meta name="theme-color" content="#0d2240">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 3 8 12v18c0 15 10 26 24 31 14-5 24-16 24-31V12Z' fill='%230d2240'/%3E%3Cpath d='M32 10 14 17v13c0 11 7 20 18 24 11-4 18-13 18-24V17Z' fill='%23f29a2e'/%3E%3Cpath d='m23 32 6 6 12-13' stroke='%230d2240' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;600&display=swap">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/" aria-label="Kavach home">
+        <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <path d="M32 3 8 12v18c0 15 10 26 24 31 14-5 24-16 24-31V12Z" class="bm-outer"/>
+          <path d="M32 10 14 17v13c0 11 7 20 18 24 11-4 18-13 18-24V17Z" class="bm-inner"/>
+          <path d="m23 32 6 6 12-13" class="bm-check"/>
+        </svg>
+        <span class="brand-text">
+          <span class="brand-name">Kavach <span class="brand-dot" aria-hidden="true">·</span> <span lang="hi">कवच</span></span>
+          <span class="brand-sub">Your shield against scams</span>
+        </span>
+      </a>
+      <div class="lang-picker">
+        <label for="language" class="lang-label">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 6h-3a15.7 15.7 0 0 0-1.4-3.6A8 8 0 0 1 18.9 8ZM12 4a14 14 0 0 1 1.9 4h-3.8A14 14 0 0 1 12 4ZM4.3 14a8 8 0 0 1 0-4h3.4a16.6 16.6 0 0 0 0 4Zm.8 2h3a15.7 15.7 0 0 0 1.4 3.6A8 8 0 0 1 5.1 16Zm3-8h-3a8 8 0 0 1 4.4-3.6A15.7 15.7 0 0 0 8.1 8ZM12 20a14 14 0 0 1-1.9-4h3.8A14 14 0 0 1 12 20Zm2.3-6H9.7a14.7 14.7 0 0 1 0-4h4.6a14.7 14.7 0 0 1 0 4Zm.3 5.6a15.7 15.7 0 0 0 1.4-3.6h3a8 8 0 0 1-4.4 3.6Zm1.7-5.6a16.6 16.6 0 0 0 0-4h3.4a8 8 0 0 1 0 4Z"/></svg>
+          <span>Explain in</span>
+        </label>
+        <select id="language" name="language">
+          <option value="auto">Same as content</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- ============================== INPUT VIEW ============================== -->
+    <section id="input-view" class="view" aria-labelledby="hero-title">
+      <div class="hero">
+        <div class="wrap">
+          <p class="eyebrow">Free · Private · 22 Indian languages</p>
+          <h1 id="hero-title" class="hero-title">Is this real?</h1>
+          <p class="hero-sub">Understand any call, notice or message — in your language. Kavach checks it for scam tricks, explains it simply, and reads it out loud.</p>
+          <p class="hero-sub hero-sub-hi" lang="hi">क्या यह असली है? कॉल, नोटिस या मैसेज — अपनी भाषा में समझिए।</p>
+        </div>
+      </div>
+
+      <div class="wrap input-wrap">
+        <div class="card input-card">
+          <div class="tabs" role="tablist" aria-label="How do you want to share it?">
+            <button type="button" class="tab" role="tab" id="tab-upload" aria-controls="panel-upload" aria-selected="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 7 8h3.5v7h3V8H17l-5-5ZM5 18h14v3H5z"/></svg>
+              <span>Upload</span>
+            </button>
+            <button type="button" class="tab" role="tab" id="tab-record" aria-controls="panel-record" aria-selected="false" tabindex="-1">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 0 0-7 0v6A3.5 3.5 0 0 0 12 15Zm6-3.5h-2a4 4 0 0 1-8 0H6a6 6 0 0 0 5 5.9V21h2v-3.6a6 6 0 0 0 5-5.9Z"/></svg>
+              <span>Record</span>
+            </button>
+            <button type="button" class="tab" role="tab" id="tab-text" aria-controls="panel-text" aria-selected="false" tabindex="-1">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v12H7l-3 3V4Zm3 4v2h10V8H7Zm0 4v2h7v-2H7Z"/></svg>
+              <span>Paste text</span>
+            </button>
+          </div>
+
+          <!-- Upload -->
+          <div class="tab-panel" role="tabpanel" id="panel-upload" aria-labelledby="tab-upload">
+            <label class="dropzone" id="dropzone" for="file-input">
+              <input type="file" id="file-input" class="visually-hidden" accept="image/*,application/pdf,audio/*,.webm,.ogg,.m4a,.mp3,.wav,.opus,.amr">
+              <span class="dz-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" focusable="false"><path d="M14 38h-2a9 9 0 0 1-1-17.9A13 13 0 0 1 36.3 17 10.5 10.5 0 0 1 36 38h-2" /><path d="m18 28 6-6 6 6M24 22v18"/></svg>
+              </span>
+              <span class="dz-title">Drop a file here, or <span class="dz-link">choose a file</span></span>
+              <span class="dz-hint">Photo of a notice or letter · PDF · Call recording or WhatsApp voice note</span>
+              <span class="dz-limit" id="dz-limit">Up to 25 MB</span>
+            </label>
+            <div class="file-preview" id="file-preview" hidden>
+              <div class="fp-media" id="fp-media"></div>
+              <div class="fp-meta">
+                <p class="fp-name" id="fp-name"></p>
+                <p class="fp-size" id="fp-size"></p>
+                <div class="fp-actions">
+                  <button type="button" class="btn btn-primary btn-lg" id="fp-check">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Zm-1.3 14L7 12.3l1.4-1.4 2.3 2.3 4.9-4.9L17 9.7 10.7 16Z"/></svg>
+                    Check this
+                  </button>
+                  <button type="button" class="btn btn-ghost" id="fp-clear">Choose another</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Record -->
+          <div class="tab-panel" role="tabpanel" id="panel-record" aria-labelledby="tab-record" hidden>
+            <div class="recorder" id="recorder">
+              <p class="rec-intro">Put the suspicious call on speaker, or describe what happened — then tap record.</p>
+              <button type="button" class="rec-button" id="rec-toggle" aria-pressed="false">
+                <span class="rec-ring" aria-hidden="true"></span>
+                <span class="rec-dot" aria-hidden="true"></span>
+                <span class="rec-label" id="rec-label">Start recording</span>
+              </button>
+              <p class="rec-timer" id="rec-timer" aria-live="polite">0:00 <span class="muted">/ 5:00</span></p>
+              <p class="rec-status" id="rec-status" role="status"></p>
+              <div class="rec-result" id="rec-result" hidden>
+                <audio id="rec-audio" controls preload="metadata"></audio>
+                <div class="fp-actions">
+                  <button type="button" class="btn btn-primary btn-lg" id="rec-check">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Zm-1.3 14L7 12.3l1.4-1.4 2.3 2.3 4.9-4.9L17 9.7 10.7 16Z"/></svg>
+                    Check this recording
+                  </button>
+                  <button type="button" class="btn btn-ghost" id="rec-again">Record again</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text -->
+          <div class="tab-panel" role="tabpanel" id="panel-text" aria-labelledby="tab-text" hidden>
+            <form id="text-form" class="text-form" novalidate>
+              <label for="text-input" class="field-label">Paste the SMS, WhatsApp or email message</label>
+              <textarea id="text-input" rows="6" maxlength="8000" placeholder="e.g. Your electricity will be disconnected tonight at 9:30 pm. Call our officer immediately on 98XXXXXXXX…"></textarea>
+              <div class="text-footer">
+                <span class="muted" id="text-count">0 / 8000</span>
+                <button type="submit" class="btn btn-primary btn-lg" id="text-check">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Zm-1.3 14L7 12.3l1.4-1.4 2.3 2.3 4.9-4.9L17 9.7 10.7 16Z"/></svg>
+                  Check this message
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <p class="input-error" id="input-error" role="alert" hidden></p>
+        </div>
+
+        <section class="samples" aria-labelledby="samples-title">
+          <div class="section-head">
+            <h2 id="samples-title">Try a real-world example</h2>
+            <p class="muted">Recreated from common frauds reported in India</p>
+          </div>
+          <div class="sample-grid" id="sample-grid">
+            <div class="sample-skeleton"></div><div class="sample-skeleton"></div><div class="sample-skeleton"></div>
+          </div>
+        </section>
+
+        <section class="how" aria-labelledby="how-title">
+          <h2 id="how-title" class="visually-hidden">How Kavach works</h2>
+          <ol class="how-steps">
+            <li>
+              <span class="how-num" aria-hidden="true">1</span>
+              <div><strong>Share it</strong><p>Upload a photo, PDF, recording — or paste a message.</p></div>
+            </li>
+            <li>
+              <span class="how-num" aria-hidden="true">2</span>
+              <div><strong>Kavach checks it</strong><p>AI and fraud rules look for known scam tricks, and every red flag is traced back to the exact words.</p></div>
+            </li>
+            <li>
+              <span class="how-num" aria-hidden="true">3</span>
+              <div><strong>Hear the answer</strong><p>A simple explanation and what to do next — read aloud in your language.</p></div>
+            </li>
+          </ol>
+          <p class="powered">Powered by Sarvam AI · Saaras speech-to-text · Sarvam Vision · Sarvam-105B · Bulbul voice</p>
+        </section>
+      </div>
+    </section>
+
+    <!-- ============================== RESULT VIEW ============================== -->
+    <section id="result-view" class="view" hidden aria-label="Result">
+      <div class="wrap result-wrap">
+        <div class="result-toolbar">
+          <button type="button" class="btn btn-ghost" id="btn-reset">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20z"/></svg>
+            Check something else
+          </button>
+          <button type="button" class="btn btn-ghost btn-danger-text" id="btn-delete" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-3 6h12l-1 12H7L6 9Z"/></svg>
+            Clear this page
+          </button>
+        </div>
+
+        <!-- Progress -->
+        <div class="card progress-card" id="progress-card" aria-labelledby="progress-title">
+          <div class="progress-head">
+            <div class="shield-pulse" aria-hidden="true">
+              <svg viewBox="0 0 64 64" focusable="false"><path d="M32 3 8 12v18c0 15 10 26 24 31 14-5 24-16 24-31V12Z"/></svg>
+            </div>
+            <div class="progress-titles">
+              <h2 id="progress-title">Checking it for you…</h2>
+              <p class="muted" id="progress-sub">This usually takes 30–90 seconds.</p>
+            </div>
+            <p class="elapsed" aria-label="Elapsed time"><span id="elapsed">0:00</span></p>
+          </div>
+          <ol class="stepper" id="stepper"></ol>
+          <p class="visually-hidden" id="progress-live" aria-live="polite"></p>
+          <ul class="notices" id="notices"></ul>
+        </div>
+
+        <!-- Error -->
+        <div class="card error-card" id="error-card" role="alert" hidden>
+          <h2>Something went wrong</h2>
+          <p id="error-message"></p>
+          <button type="button" class="btn btn-primary" id="btn-error-reset">Try again</button>
+        </div>
+
+        <!-- Verdict -->
+        <section class="verdict" id="verdict" hidden aria-labelledby="verdict-headline">
+          <div class="verdict-main">
+            <p class="verdict-label" id="verdict-label"></p>
+            <h2 class="verdict-headline" id="verdict-headline"></h2>
+            <p class="verdict-meta" id="verdict-meta"></p>
+            <p class="verdict-degraded" id="verdict-degraded" hidden></p>
+          </div>
+          <div class="gauge" id="gauge" role="meter" aria-valuemin="0" aria-valuemax="100" aria-label="Risk score"></div>
+        </section>
+
+        <!-- Explanation in user's language -->
+        <section class="card explain-card" id="explain-card" hidden aria-labelledby="explain-title">
+          <div class="explain-head">
+            <h2 id="explain-title">What this means</h2>
+            <div class="listen" id="listen" hidden>
+              <button type="button" class="btn btn-listen" id="btn-listen" aria-pressed="false">
+                <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z"/></svg>
+                <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+                <span id="listen-label">Listen</span>
+              </button>
+            </div>
+          </div>
+          <div class="explain-body" id="explain-body"></div>
+          <audio id="speech-audio" class="speech-audio" controls preload="auto" hidden></audio>
+          <div class="actions-block" id="actions-block" hidden>
+            <h3>What you should do</h3>
+            <ul class="checklist" id="checklist"></ul>
+          </div>
+          <p class="explain-method muted" id="explain-method"></p>
+        </section>
+
+        <div class="result-grid" id="result-grid">
+          <div class="result-col">
+            <section class="card flags-card" id="flags-card" hidden aria-labelledby="flags-title">
+              <h2 id="flags-title">Red flags found <span class="count-pill" id="flags-count"></span></h2>
+              <p class="muted small">Tap a red flag to see exactly where it appears.</p>
+              <ol class="findings" id="findings"></ol>
+              <div class="legit" id="legit" hidden>
+                <h3>Signs it may be genuine</h3>
+                <ul id="legit-list"></ul>
+              </div>
+            </section>
+
+            <section class="card facts-card" id="facts-card" hidden aria-labelledby="facts-title">
+              <h2 id="facts-title">Key details</h2>
+              <p class="muted small">Links are shown as plain text on purpose — do not open them.</p>
+              <ul class="facts" id="facts"></ul>
+            </section>
+          </div>
+
+          <div class="result-col">
+            <section class="card evidence-card" id="evidence-card" hidden aria-labelledby="evidence-title">
+              <div class="evidence-headrow">
+                <h2 id="evidence-title">What Kavach read</h2>
+                <span class="badge badge-neutral" id="evidence-kind"></span>
+              </div>
+              <p class="muted small" id="evidence-sub"></p>
+              <div class="evidence" id="evidence"></div>
+            </section>
+          </div>
+        </div>
+
+        <details class="card details-card" id="english-details" hidden>
+          <summary><span>In English</span><span class="muted small">Summary</span></summary>
+          <div class="details-body">
+            <p id="english-summary"></p>
+            <ul class="checklist en-actions" id="english-actions"></ul>
+          </div>
+        </details>
+
+        <section class="card report-card" id="report-card" hidden aria-labelledby="report-title">
+          <div class="report-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z"/></svg>
+          </div>
+          <div class="report-body">
+            <h2 id="report-title">Report this fraud</h2>
+            <p>Lost money or shared details? Call <strong>1930</strong> immediately — the national cyber fraud helpline. The sooner you call, the better the chance to freeze the money.</p>
+            <div class="report-actions">
+              <a class="btn btn-danger btn-lg" href="tel:1930">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z"/></svg>
+                Call 1930
+              </a>
+              <button type="button" class="btn btn-secondary" id="btn-complaint">Prepare complaint draft</button>
+              <a class="btn btn-ghost" href="https://cybercrime.gov.in" target="_blank" rel="noopener noreferrer">cybercrime.gov.in ↗</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="card ask-card" id="ask-card" hidden aria-labelledby="ask-title">
+          <h2 id="ask-title">Ask a follow-up question</h2>
+          <p class="muted small">For example: “Should I pay the fine?” or “Is this number real?” — type or speak in any language.</p>
+          <div class="chat" id="chat" aria-live="polite"></div>
+          <form class="ask-form" id="ask-form" novalidate>
+            <label for="ask-input" class="visually-hidden">Your question</label>
+            <input id="ask-input" type="text" maxlength="1000" autocomplete="off" placeholder="Type your question…" disabled>
+            <button type="button" class="btn btn-icon" id="ask-mic" aria-label="Ask by voice" aria-pressed="false" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 0 0-7 0v6A3.5 3.5 0 0 0 12 15Zm6-3.5h-2a4 4 0 0 1-8 0H6a6 6 0 0 0 5 5.9V21h2v-3.6a6 6 0 0 0 5-5.9Z"/></svg>
+            </button>
+            <button type="submit" class="btn btn-primary" id="ask-send" disabled>Ask</button>
+          </form>
+          <p class="ask-status muted small" id="ask-status" role="status"></p>
+        </section>
+
+        <details class="card details-card trace-card" id="trace-details" hidden>
+          <summary><span>How Kavach checked this</span><span class="muted small" id="trace-total"></span></summary>
+          <div class="details-body" id="trace-body"></div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p class="privacy">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 0 1 6 0v3H9Z"/></svg>
+        <span>Kavach is stateless: your content is processed in memory for this request only and never stored on our servers.</span>
+        <button type="button" class="linklike" id="footer-delete" disabled>Clear this page.</button>
+      </p>
+      <p class="disclaimer">Not legal advice. In an emergency call <a href="tel:112">112</a>; for cyber fraud call <a href="tel:1930">1930</a>.</p>
+      <p class="muted small">Kavach · कवच — built on Sarvam AI</p>
+    </div>
+  </footer>
+
+  <dialog id="complaint-dialog" class="dialog" aria-labelledby="complaint-title">
+    <div class="dialog-inner">
+      <div class="dialog-head">
+        <h2 id="complaint-title">Complaint draft</h2>
+        <button type="button" class="btn btn-icon" id="complaint-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4z"/></svg>
+        </button>
+      </div>
+      <p class="muted small">Review and add your details (name, date, amount lost) before filing at cybercrime.gov.in or with your local police.</p>
+      <label for="complaint-text" class="visually-hidden">Complaint text</label>
+      <textarea id="complaint-text" class="complaint-text" rows="14" readonly></textarea>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-primary" id="complaint-copy">Copy text</button>
+        <button type="button" class="btn btn-secondary" id="complaint-download">Download .txt</button>
+        <a class="btn btn-ghost" href="https://cybercrime.gov.in" target="_blank" rel="noopener noreferrer">cybercrime.gov.in ↗</a>
+        <a class="btn btn-danger" href="tel:1930">Call 1930</a>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
