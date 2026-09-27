@@ -85,7 +85,7 @@ SDK: official `sarvamai` Python SDK **0.1.34**. All calls go through a single ga
    - Each request records a trace of every Sarvam call, and the UI shows it.
    - **LLM latency and loops.** Reasoning is off (`reasoning_effort=None`). We measured about 12 s against 166–255 s with reasoning on, and quotes were still verified 5/5.
    - About 1 in 6 generations fell into a repetition loop. A normal analysis is 230–1,170 tokens, so `max_tokens` is capped at 2,000 and a loop fails fast.
-   - `chat_json` makes up to 3 attempts. Retries add `frequency_penalty=0.5`. In testing this broke the loops, and 14/14 quotes were still verified.
+   - `chat_json` makes up to 3 attempts: the same model at a slightly higher temperature, then `sarvam-105b-conversations`. Loops are random, so a plain retry recovers. We tried `frequency_penalty` and removed it: on Hindi input it made 6/6 attempts run to the cap with broken JSON (vs 4/4 clean without it); the live screenshots caught this as a degraded result.
 7. **Addressable evidence.** Every input becomes a list of `Segment`s: an OCR block with a bbox, a diarized utterance with start/end and speaker, or a sentence. Findings point to segment ids, which lets the UI highlight the image region or seek the audio to that moment.
 
 ## Responsible AI & privacy
@@ -180,7 +180,7 @@ Suggested dev pins: `pytest>=9.1`, `pytest-asyncio>=1.4`.
 
 Evidence verification: 96.4% (run 1) and 96.8% (run 2) of AI-cited quotes were found in the source; the rest were discarded and did not affect the score. Latency p50 5.7 s, p95 41 s (text cases, run 2).
 
-Between the runs we fixed what run 1 exposed: genuine OTP-delivery messages being flagged (rules now recognise a delivered code and "valid for N minutes"; the prompt states that safety advice is a sign of a genuine message), Hinglish advisory phrases, and LLM repetition loops (retry with a frequency penalty, then fall back to the conversations model; degraded runs went from 2 to 0). **Caveat:** these fixes were made after looking at this same set, so run 2 is a development-set score, not a held-out one. The dataset is small and synthetic; a larger held-out set is on the roadmap.
+Between the runs we fixed what run 1 exposed: genuine OTP-delivery messages being flagged (rules now recognise a delivered code and "valid for N minutes"; the prompt states that safety advice is a sign of a genuine message), Hinglish advisory phrases, and LLM repetition loops (retry, then fall back to the conversations model; degraded runs went from 2 to 0). **Caveat:** these fixes were made after looking at this same set, so run 2 is a development-set score, not a held-out one. The dataset is small and synthetic; a larger held-out set is on the roadmap.
 
 **Smoke results on the bundled samples** (live Sarvam APIs, `python scripts/smoke.py`, 27 Sep 2026):
 

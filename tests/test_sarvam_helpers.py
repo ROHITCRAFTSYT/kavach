@@ -182,7 +182,8 @@ async def test_chat_json_unparsable_three_times_raises_sarvam_error(settings):
     with pytest.raises(sarvam.SarvamError):
         await gw.chat_json(name="t", system="s", user="u", schema={})
     assert len(comp.calls) == 3
-    assert comp.calls[1].get("frequency_penalty") == 0.5  # retries break repetition loops
+    assert all("frequency_penalty" not in c for c in comp.calls)  # it broke Hindi JSON output in testing
+    assert comp.calls[2]["model"] == settings.chat_model  # last attempt falls back to the other model
 
 
 async def test_chat_text_cleans_output(settings):

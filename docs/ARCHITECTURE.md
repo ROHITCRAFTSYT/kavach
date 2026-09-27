@@ -86,7 +86,7 @@ sequenceDiagram
 2. **LLM extraction.** `sarvam-105b` receives the segments as `[segment_id speaker=… t=…s page=…] text`. It returns the `ANALYSIS_SCHEMA` fields: `document_kind`, `claimed_sender`, `summary`, `suspected_caller_speaker`, `findings[{pattern_id ∈ taxonomy, segment_id, quote, explanation, severity}]`, `legitimacy_indicators`, `key_facts`, `recommended_actions`.
    - **Reasoning is disabled** (`reasoning_effort=None`). We measured about 12 s against 166–255 s with reasoning on. With reasoning on, reasoning tokens could also use up `max_tokens` and truncate the JSON. Quotes were still verified 5/5 with reasoning off.
    - **`max_tokens` is capped at 2,000.** A normal analysis is 230–1,170 tokens, but about 1 in 6 generations fell into a repetition loop. The cap makes a loop fail fast.
-   - **Up to 3 attempts** for invalid JSON. Each retry adds `frequency_penalty=0.5` and raises the temperature by 0.2 (up to 0.7). In testing this broke the loops, and 14/14 quotes were still verified.
+   - **Up to 3 attempts** for invalid JSON: the same model at a slightly higher temperature, then `sarvam-105b-conversations`. Loops are random, so a plain retry recovers. We tried `frequency_penalty` and removed it: on Hindi input it made 6/6 attempts run to the cap with broken JSON (vs 4/4 clean without it); the live screenshots caught this as a degraded result.
 3. **Grounding.** Each AI quote goes through `grounding.verify(quote, segment_id, segments)`:
    - Normalise both sides: NFC, casefold, and drop nuktas and ZWJ/ZWNJ/ZWSP. An index map back to the original offsets is kept.
    - Align against **windows of 1–3 consecutive segments**, starting at the **cited** segment and then trying all the others. A quote can legitimately span several STT phrase chunks.
@@ -241,7 +241,7 @@ Example:
 | Non-retryable errors | 400/422 give a friendly message with the API's error detail. 401/403 tell the user to contact the operator. |
 | Rate limits | `asyncio.Semaphore` per API: llm 6, tts 6, stt 4, vision 2, text 8. Vision polls with backoff (2 s × 1.4, up to 6 s). |
 | Long jobs | 240 s job timeout, which fits Vercel's 300 s function limit. 90 s request timeout. ffmpeg has a 120 s timeout. |
-| LLM latency and loops | Reasoning off. `max_tokens` capped at 2,000. Up to 3 attempts, with `frequency_penalty=0.5` on retries (§2.2). |
+| LLM latency and loops | Reasoning off. `max_tokens` capped at 2,000. Up to 3 attempts, the last on the conversations model; no frequency penalty (§2.2). |
 | Blocking SDK | The synchronous `sarvamai` calls run in `asyncio.to_thread`. |
 | Observability | Every call gets a trace span. Structured log lines (`span … api=… ms=… ok=…`). |
 | Abuse | 12 req/min per IP (sliding window, bounded memory, per instance). Upload cap: 25 MB by default, 4 MB on Vercel. 12K-char text cap. 900 s audio cap. 600 KB cap on context bodies. |

@@ -144,9 +144,10 @@ class SarvamGateway:
         )
         kwargs["reasoning_effort"] = reasoning_effort
         last_error = "empty response"
-        # Measured: a normal analysis is 230-1,170 tokens, but ~1 in 6 generations falls into a
-        # repetition loop until the cap. A 2,000-token cap makes a loop fail fast (~15 s); retries add
-        # a frequency penalty, which broke loops in testing without hurting verbatim quotes (14/14 verified).
+        # Measured: a normal analysis is 230-1,190 tokens, but some generations fall into a repetition
+        # loop until the cap. A 2,000-token cap makes a loop fail fast (~15 s) and loops are random, so a
+        # plain retry works. Do NOT add frequency_penalty: on Hindi input it made 6/6 attempts (both
+        # models) run to the cap with broken JSON, versus 4/4 clean without it.
         for attempt in range(3):
             resp = await self._call(f"chat.{name}", "llm", self.client.chat.completions, **kwargs)
             choice = resp.choices[0]
@@ -156,7 +157,6 @@ class SarvamGateway:
             except ValueError as exc:
                 last_error = f"{exc} (finish_reason={choice.finish_reason})"
                 log.warning("chat %s attempt %d returned invalid JSON: %s", name, attempt + 1, last_error)
-                kwargs["frequency_penalty"] = 0.5
                 kwargs["temperature"] = min(kwargs["temperature"] + 0.2, 0.7)
                 if attempt == 1:  # last try: a different model (same API schema) to escape a persistent loop
                     kwargs["model"] = self.settings.chat_model
