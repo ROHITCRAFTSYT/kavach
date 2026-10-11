@@ -198,13 +198,11 @@ Use this for self-hosting. The image is `python:3.12-slim` with ffmpeg. It runs 
 ## Tests & evaluation
 
 ```bash
-pip install pytest pytest-asyncio   # requirements-dev
+pip install -r requirements-dev.txt
 python -m pytest -q                 # 151 offline tests: grounding, rules, scoring, ingest, API
 python eval/run_eval.py             # labelled eval set → metrics (results in eval/results/)
 python scripts/smoke.py             # full live pipeline on every bundled sample
 ```
-
-Suggested dev pins: `pytest>=9.1`, `pytest-asyncio>=1.4`.
 
 **Bugs the test suite caught (all fixed):**
 - Grounding accepted made-up quotes that were longer than a short segment. It now aligns against windows of up to 3 consecutive segments, and uses a full ratio when the quote is longer than the window.
